@@ -2,225 +2,156 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ayham OS</title>
   <style>
-    * {
+    body {
       margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      background: #1e1e1e;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
     }
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: url('assets/wallpaper.jpg') center/cover no-repeat;
+    #desktop {
+      position: relative;
+      width: 100vw;
       height: 100vh;
+      background: url('https://picsum.photos/seed/ayham/1920/1080') no-repeat center center;
+      background-size: cover;
+    }
+
+    .window {
+      position: absolute;
+      width: 400px;
+      height: 300px;
+      background: #fff;
+      border: 2px solid #4a90e2;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #000;
       overflow: hidden;
+      resize: both;
+    }
+
+    .titlebar {
+      background: #4a90e2;
+      color: #fff;
+      padding: 8px;
+      cursor: move;
+      font-weight: bold;
+    }
+
+    .content {
+      padding: 10px;
+      height: calc(100% - 30px);
+      overflow: auto;
     }
 
     #taskbar {
       position: absolute;
       bottom: 0;
       width: 100%;
-      height: 50px;
-      background: rgba(20, 20, 20, 0.9);
-      display: flex;
-      align-items: center;
-      padding: 0 10px;
-      gap: 10px;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.5);
-    }
-
-    .app-icon {
-      width: 32px;
-      height: 32px;
-      background: #4fc3f7;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    .app-icon:hover {
-      transform: scale(1.1);
-    }
-
-    .window {
-      position: absolute;
-      top: 100px;
-      left: 100px;
-      width: 400px;
-      height: 300px;
-      background: #1c1c1c;
-      color: #eee;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .title-bar {
       background: #333;
-      padding: 10px;
-      cursor: move;
-      font-weight: bold;
+      color: #fff;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      padding: 5px 10px;
     }
 
-    .close-btn, .maximize-btn {
+    #launcher button {
+      margin-right: 5px;
+      padding: 5px 10px;
+      background: #4a90e2;
+      color: #fff;
       border: none;
-      color: white;
-      padding: 2px 8px;
       border-radius: 4px;
       cursor: pointer;
-      margin-left: 5px;
     }
 
-    .close-btn {
-      background: #f44336;
-    }
-
-    .maximize-btn {
-      background: #4caf50;
-    }
-
-    .content {
-      padding: 15px;
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    input, textarea, button {
-      font-family: inherit;
+    #clock {
       font-size: 14px;
     }
   </style>
 </head>
 <body>
-
+  <div id="desktop"></div>
   <div id="taskbar">
-    <div class="app-icon" onclick="openApp('notes')">N</div>
-    <div class="app-icon" onclick="openApp('terminal')">T</div>
-    <div class="app-icon" onclick="openApp('loader')">L</div>
-  </div>
-
-  <div id="notes" class="window">
-    <div class="title-bar">
-      Notes
-      <div>
-        <button class="maximize-btn" onclick="maximizeApp(this)">⬜</button>
-        <button class="close-btn" onclick="closeApp('notes')">X</button>
-      </div>
+    <div id="launcher">
+      <button onclick="launchApp('Ayham AI')">Ayham AI</button>
+      <button onclick="launchApp('Video Editor')">Video Editor</button>
+      <button onclick="launchApp('AyLang Studio')">AyLang</button>
+      <button onclick="launchApp('Notepad')">Notepad</button>
+      <button onclick="launchApp('Mini Games')">Games</button>
+      <button onclick="launchApp('Web Browser')">Browser</button>
     </div>
-    <div class="content">
-      <textarea style="width:100%; height:100%; background:#222; color:#eee; border:none; padding:10px;"></textarea>
-    </div>
-  </div>
-
-  <div id="terminal" class="window">
-    <div class="title-bar">
-      Terminal
-      <div>
-        <button class="maximize-btn" onclick="maximizeApp(this)">⬜</button>
-        <button class="close-btn" onclick="closeApp('terminal')">X</button>
-      </div>
-    </div>
-    <div class="content">
-      <div id="terminal-output" style="height:200px; overflow-y:auto; background:#111; padding:10px; margin-bottom:10px;"></div>
-      <input type="text" id="terminal-input" placeholder="Type a command..." style="width:100%; padding:10px;" onkeydown="handleTerminal(event)">
-    </div>
-  </div>
-
-  <div id="loader" class="window">
-    <div class="title-bar">
-      Loader
-      <div>
-        <button class="maximize-btn" onclick="maximizeApp(this)">⬜</button>
-        <button class="close-btn" onclick="closeApp('loader')">X</button>
-      </div>
-    </div>
-    <div class="content">
-      <input type="text" id="loader-url" placeholder="Enter URL to load" style="width:100%; padding:10px; margin-bottom:10px;">
-      <button onclick="loadContent()">Load</button>
-      <div id="loader-preview" style="margin-top:15px;"></div>
-    </div>
+    <div id="clock"></div>
   </div>
 
   <script>
-    function openApp(id) {
-      const win = document.getElementById(id);
-      win.style.display = "flex";
-    }
+    function launchApp(name) {
+      const win = document.createElement('div');
+      win.className = 'window';
+      win.style.top = Math.random() * 300 + 'px';
+      win.style.left = Math.random() * 500 + 'px';
 
-    function closeApp(id) {
-      const win = document.getElementById(id);
-      win.style.display = "none";
-    }
+      const title = document.createElement('div');
+      title.className = 'titlebar';
+      title.textContent = name;
+      win.appendChild(title);
 
-    function maximizeApp(btn) {
-      const win = btn.closest('.window');
-      win.style.top = "0";
-      win.style.left = "0";
-      win.style.width = "100vw";
-      win.style.height = "100vh";
-    }
+      const content = document.createElement('div');
+      content.className = 'content';
 
-    function loadContent() {
-      const url = document.getElementById('loader-url').value;
-      const preview = document.getElementById('loader-preview');
-      if (!url) return preview.innerHTML = "<p>Please enter a URL.</p>";
-      preview.innerHTML = `<p>Loading: ${url}</p><iframe src="${url}" style="width:100%; height:200px; border:none;"></iframe>`;
-    }
-
-    function handleTerminal(e) {
-      if (e.key === "Enter") {
-        const input = document.getElementById("terminal-input");
-        const output = document.getElementById("terminal-output");
-        const cmd = input.value.trim().toLowerCase();
-        let response = "";
-
-        if (cmd === "hello") response = "Hi Ayham 👋";
-        else if (cmd === "launch loader") openApp("loader");
-        else if (cmd === "clear") output.innerHTML = "";
-        else response = `Unknown command: ${cmd}`;
-
-        if (response) output.innerHTML += `<div>> ${cmd}<br>${response}</div>`;
-        input.value = "";
-        output.scrollTop = output.scrollHeight;
+      // App logic
+      if (name === 'Ayham AI') {
+        content.innerHTML = `
+          <textarea id="aiPrompt" placeholder="Ask Ayham AI..." style="width:100%;height:60px;"></textarea>
+          <button onclick="askAyhamAI(this)">Ask</button>
+          <div id="aiReply"></div>
+        `;
+      } else if (name === 'Video Editor') {
+        content.innerHTML = `<p>Video Editor coming soon...</p>`;
+      } else if (name === 'AyLang Studio') {
+        content.innerHTML = `<textarea style="width:100%;height:200px;">say "Hello from AyLang!"</textarea>`;
+      } else if (name === 'Notepad') {
+        content.innerHTML = `<textarea style="width:100%;height:100%;">Type your notes here...</textarea>`;
+      } else if (name === 'Mini Games') {
+        content.innerHTML = `<button onclick="alert('You win!')">Click Me Game</button>`;
+      } else if (name === 'Web Browser') {
+        content.innerHTML = `<input type="text" placeholder="Enter URL" onkeydown="if(event.key==='Enter'){openURL(this.value)}" style="width:100%;" />`;
       }
+
+      win.appendChild(content);
+      document.getElementById('desktop').appendChild(win);
+
+      // Drag logic
+      title.onmousedown = function (e) {
+        let offsetX = e.clientX - win.offsetLeft;
+        let offsetY = e.clientY - win.offsetTop;
+        document.onmousemove = function (e) {
+          win.style.left = e.clientX - offsetX + 'px';
+          win.style.top = e.clientY - offsetY + 'px';
+        };
+        document.onmouseup = function () {
+          document.onmousemove = null;
+        };
+      };
     }
 
-    // Drag logic
-    document.querySelectorAll('.window').forEach(win => {
-      const bar = win.querySelector('.title-bar');
-      let offsetX, offsetY, isDragging = false;
+    function askAyhamAI(btn) {
+      const prompt = btn.previousElementSibling.value;
+      const replyBox = btn.nextElementSibling;
+      replyBox.textContent = "Ayham AI says: " + (prompt.includes("build") ? "Build something mythic." : "I'm listening...");
+    }
 
-      bar.addEventListener('mousedown', e => {
-        isDragging = true;
-        offsetX = e.clientX - win.offsetLeft;
-        offsetY = e.clientY - win.offsetTop;
-      });
+    function openURL(url) {
+      window.open(url, '_blank');
+    }
 
-      document.addEventListener('mousemove', e => {
-        if (isDragging) {
-          win.style.left = `${e.clientX - offsetX}px`;
-          win.style.top = `${e.clientY - offsetY}px`;
-        }
-      });
-
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
-    });
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').textContent = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
   </script>
-
 </body>
 </html>
-
