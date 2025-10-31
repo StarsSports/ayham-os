@@ -88,24 +88,19 @@
       flex: 1;
       overflow-y: auto;
     }
+
+    input, textarea, button {
+      font-family: inherit;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
 
   <div id="taskbar">
-    <div class="app-icon" onclick="openApp('viewer')">V</div>
     <div class="app-icon" onclick="openApp('notes')">N</div>
     <div class="app-icon" onclick="openApp('terminal')">T</div>
-  </div>
-
-  <div id="viewer" class="window">
-    <div class="title-bar">
-      Viewer
-      <button class="close-btn" onclick="closeApp('viewer')">X</button>
-    </div>
-    <div class="content">
-      <p>This will load your GitHub files.</p>
-    </div>
+    <div class="app-icon" onclick="openApp('loader')">L</div>
   </div>
 
   <div id="notes" class="window">
@@ -128,6 +123,18 @@
     </div>
   </div>
 
+  <div id="loader" class="window">
+    <div class="title-bar">
+      Loader
+      <button class="close-btn" onclick="closeApp('loader')">X</button>
+    </div>
+    <div class="content">
+      <input type="text" id="loader-url" placeholder="Enter URL to load" style="width:100%; padding:10px; margin-bottom:10px;">
+      <button onclick="loadContent()">Load</button>
+      <div id="loader-preview" style="margin-top:15px;"></div>
+    </div>
+  </div>
+
   <script>
     function openApp(id) {
       const win = document.getElementById(id);
@@ -137,6 +144,14 @@
     function closeApp(id) {
       const win = document.getElementById(id);
       win.style.display = "none";
+    }
+
+    function loadContent() {
+      const url = document.getElementById('loader-url').value;
+      const preview = document.getElementById('loader-preview');
+      if (!url) return preview.innerHTML = "<p>Please enter a URL.</p>";
+
+      preview.innerHTML = `<p>Loading: ${url}</p><iframe src="${url}" style="width:100%; height:200px; border:none;"></iframe>`;
     }
 
     // Drag logic
